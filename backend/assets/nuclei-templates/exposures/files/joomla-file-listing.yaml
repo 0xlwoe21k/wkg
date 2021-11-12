@@ -1,0 +1,26 @@
+id: joomla-file-listing
+
+info:
+  name: Joomla db files listing
+  author: iampritam
+  severity: info
+  reference: https://www.exploit-db.com/ghdb/6377
+  description: Searches for the pattern /libraries/joomla/db/ on passed URLs.
+  tags: exposure,joomla,listing
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/libraries/joomla/db/"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Index of /libraries/joomla/db"
+          - "Parent Directory"
+        condition: and
+
+      - type: status
+        status:
+          - 200
