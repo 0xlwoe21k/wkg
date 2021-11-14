@@ -1,6 +1,6 @@
 package services
 
-import "backend/services/DomainMonitorService"
+import "backend/services/domainMonitorService"
 
 func InitService()  {
 
@@ -11,6 +11,6 @@ func InitService()  {
 	//if err != nil{
 	//	log.Fatalln("[!] service.go InitService register error.:",err)
 	//}
-	DomainMonitorService.StartDomainMonitorService()
+	domainMonitorService.StartDomainMonitorService()
 }
 

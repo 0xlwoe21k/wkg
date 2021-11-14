@@ -1,8 +1,9 @@
-package DomainMonitorService
+package domainMonitorService
 
 import (
 	"backend/db"
 	"backend/libs/helper"
+	"backend/libs/safe"
 	"backend/models"
 	subdomainscan2 "backend/module/subdomainscan"
 	"context"
@@ -19,33 +20,33 @@ import (
 )
 
 type domainMoniter struct {
-	DomainCache		   []models.Domain
+	DomainCache           []models.Domain
 	UpdateDomainCacheTime time.Duration
-	threadNum          int
-	cmpInfo            []models.Company
-	updateCmpInfoTime  time.Duration
-	ScanDomainInfoTime time.Duration
-	ctx                context.Context
-	cancel             context.CancelFunc
-	newCmpFlag         chan bool
-	once               *sync.Once
-	lock               *sync.RWMutex
-	wg                 *sync.WaitGroup
+	threadNum             int
+	cmpInfo               []models.Company
+	updateCmpInfoTime     time.Duration
+	ScanDomainInfoTime    time.Duration
+	ctx                   context.Context
+	cancel                context.CancelFunc
+	newCmpFlag            chan bool
+	once                  *sync.Once
+	lock                  *sync.RWMutex
+	wg                    *sync.WaitGroup
 }
 
 func NewDomainMoniter(updateCmpTime time.Duration) *domainMoniter {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &domainMoniter{
-		threadNum:          1,
-		wg:                 &sync.WaitGroup{},
-		newCmpFlag:         make(chan bool),
-		ctx:                ctx,
-		once:               &sync.Once{},
-		cancel:             cancel,
-		lock:               &sync.RWMutex{},
-		updateCmpInfoTime:  updateCmpTime * time.Second,
-		ScanDomainInfoTime: ScanDomainTime * time.Second,
-		UpdateDomainCacheTime: UpdateDomainCacheTime* time.Second,
+		threadNum:             1,
+		wg:                    &sync.WaitGroup{},
+		newCmpFlag:            make(chan bool),
+		ctx:                   ctx,
+		once:                  &sync.Once{},
+		cancel:                cancel,
+		lock:                  &sync.RWMutex{},
+		updateCmpInfoTime:     updateCmpTime * time.Second,
+		ScanDomainInfoTime:    ScanDomainTime * time.Second,
+		UpdateDomainCacheTime: UpdateDomainCacheTime * time.Second,
 	}
 }
 
@@ -63,8 +64,8 @@ func (d *domainMoniter) startDomainMonitorService() {
 	fmt.Println("[*] Start domain monitor service.")
 	//按给定时间读取数据库中的公司信息
 	d.initDomainCache()
-	time.Sleep(3*time.Second)
-	go d.loopUpdateDomainCache()
+	//time.Sleep(3 * time.Second)
+	//go d.loopUpdateDomainCache()
 	go d.loopUpdateCmpInfo()
 	//域名监控功能
 	//按设定的总时间一次性从数据库里读取信息，进行域名监控扫描。
@@ -77,25 +78,34 @@ func (d *domainMoniter) loopUpdateDomainCache() {
 	for {
 		select {
 		case <-ticker.C:
-			err := db.Orm.Model(&models.Domain{}).Save(&d.DomainCache).Error
-			if err != nil {
-				log.Fatalln("[!] domainMonitorService.go save domain cache failed. line:75.  [", err,"]")
-				return
+			if len(d.DomainCache) < 1000 {
+				err := db.Orm.Debug().Model(&models.Domain{}).Updates(&d.DomainCache).Error
+				if err != nil {
+					log.Fatalln("[!] domainMonitorService.go save domain cache failed. line:75.  [", err, "]")
+					return
+				}
+			} else {
+				for i := 0; i < len(d.DomainCache)/1000; i += 1000 {
+					tmpDomain := d.DomainCache[i : i*1000]
+					err := db.Orm.Model(&models.Domain{}).Updates(&tmpDomain).Error
+					if err != nil {
+						log.Fatalln("[!] domainMonitorService.go save domain cache failed. line:91.  [", err, "]")
+						return
+					}
+				}
 			}
 		default:
 		}
 	}
-
 }
 
 func (d *domainMoniter) initDomainCache() {
 	err := db.Orm.Model(&models.Domain{}).Find(&d.DomainCache).Error
 	if err != nil {
-		log.Fatalln("domainMonitorService.go init domain cache failed. line:83,   [", err,"]")
+		log.Fatalln("[!] domainMonitorService.go init domain cache failed. line:83,   [", err, "]")
 		return
 	}
 }
-
 
 func (d *domainMoniter) loopMonitorDomain() {
 	rctx, _ := context.WithCancel(d.ctx)
@@ -104,8 +114,7 @@ func (d *domainMoniter) loopMonitorDomain() {
 	for {
 		select {
 		case <-ticker.C:
-			go d.scanDomainByAmass()
-			time.Sleep(100 * time.Hour)
+			d.scanDomainByAmass()
 		case <-rctx.Done():
 			return
 		default:
@@ -124,43 +133,64 @@ func (d *domainMoniter) scanDomainByAmass() {
 		sd := strings.Split(vcmp.Domain, "|")
 		for _, vd := range sd {
 			fmt.Println("[*] domain monitor:", vd)
-			domainResult := subdomainscan2.DomainBrute(vd)
+
+			var domainResult []string
+			var errCh = make(chan error,1)
+			safe.Go(func() error {
+				domainResult = subdomainscan2.DomainBrute(vd)
+				return nil
+			},errCh)
+			if <-errCh != nil{
+				fmt.Println("go error. ",<-errCh)
+				continue
+			}
 			fmt.Println("new domain count:", len(domainResult))
-			fp := false
+			fp := true
 			if domainResult != nil {
-				//var domins []models.Domain
-				//err := db.Orm.Debug().Model(&models.Domain{}).Find(&domins).Error
-				//if err != nil {
-				//	log.Fatalln("start scan queue error.:", err)
-				//	return
-				//}
-				//fmt.Println("found exist domain count:", len(domins))
-				for _, v := range domainResult {
+     				for _, v := range domainResult {
 					//如果域名长度大于150，丢弃这个域名。
 					if len(v) > 150 {
 						continue
 					}
+					if len(d.DomainCache) == 0 {
+						var newDomain = models.Domain{IsNew: &fp}
+						newDomain.Domain = v
+						newDomain.Cid = vcmp.Id
+						*newDomain.IsNew = true
+						newDomain.UpdateTime = helper.GetCurTime()
+						d.DomainCache = append(d.DomainCache, newDomain)
+						err := db.Orm.Debug().Model(&models.Domain{}).Create(&newDomain).Error
+						if err != nil {
+							log.Fatalln("[!] domainMonitorService.go line:147 insert into error.   [", err, "]")
+						}
+						continue
+					}
+					//判断是否已经存在，如果已经存在就不储存
+					var isExsit = false
 					for _, s := range d.DomainCache {
-						if !strings.Contains(v, s.Domain) {
-							//如果记录不存在就插到数据库里
-							var newDomain = models.Domain{IsNew: &fp}
-							newDomain.Domain = v
-							newDomain.Cid = vcmp.Id
-							*newDomain.IsNew = true
-							newDomain.UpdateTime = helper.GetCurTime()
-							d.DomainCache = append(d.DomainCache,newDomain)
-							//err = db.Orm.Model(&models.Domain{}).Create(&newDomain).Error
-							//if err != nil {
-							//	log.Fatalln("[!] domainMonitorService.go db crate error:", err)
-							//	continue
-							//}
+						if v == s.Domain {
+							isExsit = true
 							break
 						}
+					}
+					if !isExsit {
+						//如果记录不存在就插到数据库里
+						var newDomain = models.Domain{IsNew: &fp}
+						newDomain.Domain = v
+						newDomain.Cid = vcmp.Id
+						*newDomain.IsNew = true
+						newDomain.UpdateTime = helper.GetCurTime()
+						d.DomainCache = append(d.DomainCache, newDomain)
+						err := db.Orm.Model(&models.Domain{}).Create(&newDomain).Error
+						if err != nil {
+							log.Fatalln("[!] domainMonitorService.go line:155 insert into error.   [", err, "]")
+						}
+						isExsit = false
 					}
 				}
 			}
 		}
-		fmt.Println("domain cache:",len(d.DomainCache))
+		fmt.Println("domain cache:", len(d.DomainCache))
 	}
 }
 
@@ -168,9 +198,8 @@ func (d *domainMoniter) loopUpdateCmpInfo() {
 
 	err := db.Orm.Model(&models.Company{}).Find(&d.cmpInfo).Error
 	if err != nil {
-		log.Fatalln("[!] service.go domainMonitorService line:137 db error:", err)
+		log.Fatalln("[!] domainMonitorService.go  line:137 db error:", err)
 	}
-
 	ticker := time.NewTicker(d.updateCmpInfoTime)
 	for {
 		select {
@@ -179,7 +208,7 @@ func (d *domainMoniter) loopUpdateCmpInfo() {
 			//获取各公司的域名信息和待监控状态
 			err := db.Orm.Model(&models.Company{}).Find(&d.cmpInfo).Error
 			if err != nil {
-				log.Fatalln("[!] service.go domainMonitorService line:148 db error:", err)
+				log.Fatalln("[!] domainMonitorService.go domainMonitorService line:148 db error:", err)
 				continue
 			}
 		default:

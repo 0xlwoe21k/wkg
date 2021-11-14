@@ -9,11 +9,11 @@ import (
 	"net"
 	"time"
 
+	"backend/libs/stringset"
 	"backend/module/subdomainscan/amass/enum"
 	"backend/module/subdomainscan/amass/requests"
 	"github.com/caffix/netmap"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
 	"golang.org/x/net/publicsuffix"
 )
 

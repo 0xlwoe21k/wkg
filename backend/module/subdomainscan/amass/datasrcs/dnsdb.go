@@ -17,7 +17,7 @@ import (
 	"backend/module/subdomainscan/amass/systems"
 	"github.com/caffix/eventbus"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 // DNSDB is the Service that handles access to the DNSDB data source.

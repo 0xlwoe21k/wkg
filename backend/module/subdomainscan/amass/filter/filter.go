@@ -5,7 +5,7 @@ package filter
 
 import (
 	"github.com/AndreasBriese/bbloom"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 // Filter is the object type for performing string filtering.

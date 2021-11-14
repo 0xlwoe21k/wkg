@@ -15,13 +15,13 @@ import (
 	"os"
 	"strconv"
 
+	"backend/libs/stringset"
 	"backend/module/subdomainscan/amass/config"
 	"backend/module/subdomainscan/amass/datasrcs"
 	"backend/module/subdomainscan/amass/format"
 	"backend/module/subdomainscan/amass/requests"
 	"backend/module/subdomainscan/amass/systems"
 	"github.com/caffix/netmap"
-	"github.com/caffix/stringset"
 	"github.com/fatih/color"
 )
 

@@ -22,7 +22,7 @@ import (
 	"sync"
 
 	_ "backend/module/subdomainscan/amass/config/statik" // The content being embedded into the binary
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/go-ini/ini"
 	"github.com/google/uuid"
 	"github.com/rakyll/statik/fs"

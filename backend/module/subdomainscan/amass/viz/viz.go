@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/caffix/netmap"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/cayleygraph/quad"
 )
 

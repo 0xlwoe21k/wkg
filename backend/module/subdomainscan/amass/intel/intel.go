@@ -20,7 +20,7 @@ import (
 	"github.com/caffix/pipeline"
 	"github.com/caffix/resolve"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/miekg/dns"
 	"golang.org/x/net/publicsuffix"
 )

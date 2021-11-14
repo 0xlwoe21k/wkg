@@ -21,7 +21,7 @@ import (
 	"backend/module/subdomainscan/amass/systems"
 	"github.com/caffix/eventbus"
 	"github.com/caffix/resolve"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/fatih/color"
 	"github.com/miekg/dns"
 )

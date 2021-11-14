@@ -19,7 +19,7 @@ import (
 	"github.com/caffix/eventbus"
 	"github.com/caffix/resolve"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 // Umbrella is the Service that handles access to the Umbrella data source.

@@ -17,7 +17,7 @@ import (
 	"github.com/caffix/pipeline"
 	"github.com/caffix/queue"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 const (

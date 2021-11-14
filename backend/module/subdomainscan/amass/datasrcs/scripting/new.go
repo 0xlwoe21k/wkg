@@ -13,7 +13,7 @@ import (
 	"backend/module/subdomainscan/amass/requests"
 	"github.com/caffix/eventbus"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	lua "github.com/yuin/gopher-lua"
 )
 

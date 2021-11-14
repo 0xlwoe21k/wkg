@@ -2,7 +2,7 @@ package models
 
 type Domain struct {
 	Id         	int     `gorm:"primary_key;column:id" json:"id"`
-	Cid        	int     `gorm:"primary_key;column:cid" json:"cid"`
+	Cid        	int     `gorm:"foreignkey;column:cid" json:"cid"`
 	Domain     	string  `gorm:"column:domain" json:"domain"`
 	Title	   	string  `gorm:"column:title" json:"title"`
 	Type       	string  `gorm:"column:type" json:"type"`

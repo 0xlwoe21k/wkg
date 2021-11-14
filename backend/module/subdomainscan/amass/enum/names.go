@@ -11,7 +11,7 @@ import (
 	"github.com/caffix/pipeline"
 	"github.com/caffix/queue"
 	"github.com/caffix/resolve"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 // subdomainTask handles newly discovered proper subdomain names in the enumeration.

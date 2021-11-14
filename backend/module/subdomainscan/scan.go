@@ -8,7 +8,6 @@ import (
 	requests2 "backend/module/subdomainscan/amass/requests"
 	systems2 "backend/module/subdomainscan/amass/systems"
 	"context"
-	"github.com/caffix/stringset"
 	"log"
 	"math/rand"
 	"time"
@@ -26,12 +25,11 @@ func DomainBrute(rootDomain string) []string {
 	var result []string
 	// Setup the most basic amass configuration
 	cfg := config2.NewConfig()
+	cfg.Dir = "/tmp"
 	cfg.Passive = true
 	cfg.Recursive = false
 	cfg.Alterations = false
-
 	cfg.AddDomain(rootDomain)
-
 	sys, err := systems2.NewLocalSystem(cfg)
 
 	if err != nil {
@@ -51,8 +49,8 @@ func DomainBrute(rootDomain string) []string {
 		log.Fatalln("scan.go enum start error.")
 		return nil
 	}
-	known := stringset.New()
-	for _, o := range amass2.ExtractOutput(ctx, e, known, true, 0) {
+	//known := stringset.New()
+	for _, o := range amass2.ExtractOutput(ctx, e, nil, true, 0) {
 		result = append(result, o.Name)
 	}
 

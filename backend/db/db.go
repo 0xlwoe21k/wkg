@@ -14,7 +14,7 @@ var(
 )
 
 func init()  {
-	dsn := "root:root@(localhost)/wkg?charset=utf8&parseTime=true&loc=Local"
+	dsn := "root:123456@(localhost)/wkg?charset=utf8&parseTime=true&loc=Local"
 	Orm,err = gorm.Open(mysql.Open(dsn),&gorm.Config{})
 	if err != nil {
 		fmt.Println("[!] db.go line:18 error:"+err.Error())

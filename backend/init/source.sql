@@ -1,6 +1,6 @@
+
+#create database wkg;
 use wkg;
-
-
 drop table users;
 
 create table users (
@@ -27,11 +27,11 @@ create table company (
     lastUpdateTime varchar(20) not null default '-'
 );
 
-insert into company values (1,'SRC','小米公司','xiaomi.com','-','https://sec.xiaomi.com/#/',true,24,false,24,'-');
-# insert into company values (2,'SRC','陌陌','momo.com','-','https://sec.momo.com/#/',true,24,false,24,'-');
+# insert into company values (1,'SRC','小米公司','xiaomi.com','-','https://sec.xiaomi.com/#/',true,24,false,24,'-');
+insert into company values (2,'SRC','陌陌','momo.com','-','https://sec.momo.com/#/',true,24,false,24,'-');
 insert into company values (3,'SRC','顺丰','sf-express.com','-','https://sec.sf.com/#/',true,24,false,24,'-');
-# insert into company values (4,'SRC','平安','sf.pingan.com','-','https://sec.pingan.com/#/',true,24,false,24,'-');
-# insert into company values (5,'SRC','京东','sf.jd.com','-','https://sec.jd.com/#/',true,24,false,24,'-');
+insert into company values (4,'SRC','平安','pingan.com','-','https://sec.pingan.com/#/',true,24,false,24,'-');
+insert into company values (5,'SRC','银联','unionpay.com','-','https://sec.jd.com/#/',true,24,false,24,'-');
 # insert into company values (6,'SRC','网易','sf.jd.com','-','https://sec.jd.com/#/',true,24,false,24,'-');
 # insert into company values (7,'SRC','金山','sf.jd.com','-','https://sec.jd.com/#/',true,24,false,24,'-');
 # insert into company values (8,'SRC','阿里巴巴','sf.jd.com','-','https://sec.jd.com/#/',true,24,false,24,'-');

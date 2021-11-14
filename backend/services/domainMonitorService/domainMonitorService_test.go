@@ -1,30 +1,28 @@
-package DomainMonitorService
+package domainMonitorService
 
 import (
-	subdomainscan2 "backend/module/subdomainscan"
-	"fmt"
+	"backend/db"
+	"backend/models"
+	"log"
 	"testing"
 	"time"
 )
 
-func TestDomainMoniter_UpdateCmpInfo(t *testing.T) {
+func TestDomainMoniter_UpdateDomainInfo(t *testing.T) {
+	var DomainCache  []models.Domain
 
+	err := db.Orm.Model(&models.Domain{}).Find(&DomainCache).Error
+	if err != nil {
+		log.Fatalln("[!] domainMonitorService.go init domain cache failed. line:83,   [", err, "]")
+		return
+	}
+	DomainCache[0].Ip= "123"
 
-	var domain = "sxjdfreight.com"
-	result := subdomainscan2.DomainBrute(domain)
-	fmt.Println(result)
-
-
-	//domain  = []string{"sf-express.com"}
-	//result = subdomainscan2.DomainBrute(domain)
-	//fmt.Println(result)
-	//ticker := time.NewTicker(5*time.Second)
-	//for {
-	//	select {
-	//	case  <-ticker.C:
-	//		fmt.Println("123")
-	//	}
-	//}
+	err = db.Orm.Debug().Model(&DomainCache).Where("1=1").Save(&DomainCache).Error
+	if err != nil {
+		log.Fatalln("[!] domainMonitorService.go save domain cache failed. line:75.  [", err, "]")
+		return
+	}
 }
 
 

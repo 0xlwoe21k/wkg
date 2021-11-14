@@ -13,7 +13,7 @@ import (
 	"backend/module/subdomainscan/amass/systems"
 	"github.com/caffix/eventbus"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 // GetAllSources returns a slice of all data source services, initialized and ready.

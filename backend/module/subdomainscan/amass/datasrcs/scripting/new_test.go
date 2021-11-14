@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"backend/module/subdomainscan/amass/requests"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 func TestNewNames(t *testing.T) {

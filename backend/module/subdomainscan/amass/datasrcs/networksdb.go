@@ -21,7 +21,7 @@ import (
 	"backend/module/subdomainscan/amass/systems"
 	"github.com/caffix/eventbus"
 	"github.com/caffix/service"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 const (

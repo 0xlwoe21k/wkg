@@ -16,7 +16,7 @@ import (
 	"backend/module/subdomainscan/amass/config"
 	"backend/module/subdomainscan/amass/requests"
 	"github.com/caffix/netmap"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/fatih/color"
 )
 

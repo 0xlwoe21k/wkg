@@ -18,7 +18,7 @@ import (
 	amassnet "backend/module/subdomainscan/amass/net"
 	"backend/module/subdomainscan/amass/net/http"
 	"github.com/caffix/netmap"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/fatih/color"
 )
 

@@ -8,7 +8,7 @@ import (
 	systems2 "backend/module/subdomainscan/amass/systems"
 	"context"
 	"fmt"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"math/rand"
 	"testing"
 	"time"

@@ -17,7 +17,7 @@ import (
 	"backend/module/subdomainscan/amass/requests"
 	"github.com/caffix/pipeline"
 	"github.com/caffix/queue"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 )
 
 const (

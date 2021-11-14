@@ -27,7 +27,7 @@ import (
 	amassnet "backend/module/subdomainscan/amass/net"
 	"backend/module/subdomainscan/amass/net/dns"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/geziyor/geziyor"
 	"github.com/geziyor/geziyor/client"
 )

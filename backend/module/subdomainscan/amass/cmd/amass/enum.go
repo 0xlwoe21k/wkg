@@ -30,7 +30,7 @@ import (
 	"backend/module/subdomainscan/amass/format"
 	"backend/module/subdomainscan/amass/requests"
 	"backend/module/subdomainscan/amass/systems"
-	"github.com/caffix/stringset"
+	"backend/libs/stringset"
 	"github.com/fatih/color"
 )
 
