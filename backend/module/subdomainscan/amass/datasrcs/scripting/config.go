@@ -96,6 +96,7 @@ func (s *Script) config(L *lua.LState) int {
 	tb.RawSetString("active", lua.LBool(cfg.BruteForcing))
 	tb.RawSetString("recursive", lua.LBool(cfg.Recursive))
 	tb.RawSetString("min_for_recursive", lua.LNumber(cfg.MinForRecursive))
+	tb.RawSetString("max_depth", lua.LNumber(cfg.MaxDepth))
 	r.RawSetString("brute_forcing", tb)
 
 	tb = L.NewTable()
@@ -221,7 +222,7 @@ func (s *Script) checkRateLimit(L *lua.LState) int {
 	return 0
 }
 
-// Wrapper so that scripts can request the path to the Amass output directory.
+// Wrapper so that scripts can request the path to the amass output directory.
 func (s *Script) outputdir(L *lua.LState) int {
 	var dir string
 

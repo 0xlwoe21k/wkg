@@ -1,7 +1,7 @@
 package subdomainscan
 
 import (
-	amass2 "backend/module/subdomainscan/amass/cmd/amass"
+	"backend/module/subdomainscan/amass/enum"
 	config2 "backend/module/subdomainscan/amass/config"
 	datasrcs2 "backend/module/subdomainscan/amass/datasrcs"
 	enum2 "backend/module/subdomainscan/amass/enum"
@@ -47,7 +47,7 @@ func TestActiveDomainBrute(t *testing.T) {
 	ctx := context.Background()
 	e.Start(ctx)
 	known := stringset.New()
-	for _, o := range amass2.ExtractOutput(ctx,e,known,true,0) {
+	for _, o := range enum.ExtractOutput(ctx,e,known,true,0) {
 		fmt.Println(o.Name)
 	}
 }

@@ -5,6 +5,7 @@ package requests
 
 import (
 	"net"
+	"strings"
 	"sync"
 
 	"github.com/caffix/stringset"
@@ -80,6 +81,7 @@ func (c *ASNCache) Update(req *ASNRequest) {
 		}
 		return
 	}
+
 	// This is additional information for an ASN entry
 	if as.CC == "" && req.CC != "" {
 		as.CC = req.CC
@@ -94,16 +96,39 @@ func (c *ASNCache) Update(req *ASNRequest) {
 		as.Description = req.Description
 	}
 
-	nb := stringset.New(req.Prefix)
-	defer nb.Close()
+	// Add new CIDR ranges to cached netblocks
+	for _, cidr := range append([]string{req.Prefix}, req.Netblocks...) {
+		var known bool
 
-	if len(req.Netblocks) > 0 {
-		nb.InsertMany(req.Netblocks...)
+		for _, prefix := range as.Netblocks {
+			if prefix == cidr {
+				known = true
+				break
+			}
+		}
+
+		if !known {
+			as.Netblocks = append(as.Netblocks, cidr)
+		}
 	}
-	as.Netblocks = nb.Slice()
 }
 
-// ASNSearch return the cached ASN / netblock info associated with the provided asn parameter,
+// DescriptionSearch matches the provided string against description fields in the cache and
+// returns the ASN / netblock info for matching entries.
+func (c *ASNCache) DescriptionSearch(s string) []*ASNRequest {
+	c.Lock()
+	defer c.Unlock()
+
+	var matches []*ASNRequest
+	for _, entry := range c.cache {
+		if strings.Contains(entry.Description, s) {
+			matches = append(matches, entry)
+		}
+	}
+	return matches
+}
+
+// ASNSearch returns the cached ASN / netblock info associated with the provided asn parameter,
 // or nil when not found in the cache.
 func (c *ASNCache) ASNSearch(asn int) *ASNRequest {
 	c.Lock()

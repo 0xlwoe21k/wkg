@@ -1,3 +1,3 @@
 <template>
-这是dashboard
+adfsdfsdf
 </template>

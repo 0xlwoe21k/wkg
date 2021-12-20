@@ -20,7 +20,7 @@ var (
 func NucleiScanMulti(targePath string) {
 	//readConfig()
 
-	options.Templates = []string{"./assets/nuclei-templates"}
+	options.Templates = []string{"./tmp/nuclei-templates"}
 	options.TargetsFilePath = targePath
 
 	runner2.ParseOptions(options)
@@ -42,7 +42,7 @@ func NucleiScanMulti(targePath string) {
 func NucleiScanSingle(target string) {
 	//readConfig()
 
-	options.Templates = []string{"assets/nuclei-templates/"}
+	options.Templates = []string{"tmp/nuclei-templates/"}
 	options.Targets = []string{target}
 
 

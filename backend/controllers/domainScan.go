@@ -2,7 +2,7 @@ package controllers
 
 import (
 	subdomainscan2 "backend/module/subdomainscan"
-	requests2 "backend/module/subdomainscan/amass/requests"
+	"backend/module/subdomainscan/amass/requests"
 	"context"
 	"encoding/json"
 	"errors"
@@ -121,7 +121,7 @@ func (wsConn *wsConnection) wsWriteLoop() {
 
 func (wsConn *wsConnection) procLoop() {
 	// 启动一个gouroutine发送心跳
-	resOutput := make(chan *requests2.Output,10)
+	resOutput := make(chan *requests.Output,10)
 
 
 	//go func() {
@@ -162,7 +162,7 @@ func (wsConn *wsConnection) procLoop() {
 			continue
 		}
 		//收到消息后开始暴破域名信息
-		go func(output chan *requests2.Output,cancel context.CancelFunc) {
+		go func(output chan *requests.Output,cancel context.CancelFunc) {
 			for {
 				select {
 				case op := <- output:

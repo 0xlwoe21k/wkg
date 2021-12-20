@@ -1,105 +1,178 @@
 <template>
-  <el-container style="height: 100%; border: 1px solid #eee" direction="vertical">
-      <el-header style="text-align: right; font-size: 12px">
-        <el-dropdown>
-          <i class="el-icon-setting" style="margin-right: 15px"></i>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>View</el-dropdown-item>
-            </el-dropdown-menu>
+  <a-layout>
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+      <div class="logo">
+        <img class="logoimg" src="../assets/logo.png" />
+      </div>
+      <a-menu v-model:selectedKeys="selectedKeys" @click="menuClcik" theme="dark" mode="inline">
+        <template v-for="(item ,index) in menuList" :key="index">
+          <template v-if="item.children">
+            <a-sub-menu :key="item.key">
+              <template #title>{{ item.title }}</template>
+              <a-menu-item v-for="subitem in item.children" :key="subitem.key">
+                <router-link :to="subitem.path">
+                  <span>{{ subitem.title }}</span>
+                </router-link>
+              </a-menu-item>
+            </a-sub-menu>
           </template>
-        </el-dropdown>
-        <span>{{username}}</span>
-      </el-header>
-      
-    <el-container style="height: 100%; border: 1px solid rgb(0, 0, 0)" direction="horizontal">
-    
-    <el-aside width="200px" >
-              
-      <el-menu 
-        :default-openeds="['/index/dashboard']" 
-        :router="true"
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        text-color="#fff"
-        class="el-menu-vertical-demo"
-        :unique-opened="true"
-        >
-        <el-menu-item index="/index/dashboard">
-          <template #title>
-            <i class="el-icon-setting"></i>dashboard
+          <template v-else>
+            <a-menu-item :key="item.key">
+              <router-link :to="item.path">
+                <template #icon>{{ item.icon }}</template>
+                <span>{{ item.title }}</span>
+              </router-link>
+            </a-menu-item>
+          </template>
+        </template>
+      </a-menu>
+    </a-layout-sider>
+    <a-layout>
+      <a-layout-header style="background: #fff; padding: 0">
+        <menu-unfold-outlined
+          v-if="collapsed"
+          class="trigger"
+          @click="() => (collapsed = !collapsed)"
+        />
+        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+        <a-dropdown placement="bottomCenter">
+          <a-avatar class="user">
+            <template #icon>
+              <user-outlined @click="BntUser"></user-outlined>
             </template>
-        </el-menu-item>
-        <el-sub-menu index="2">
-          <template #title>
-            <i class="el-icon-menu"></i>扫描模块</template>
-            <el-menu-item index="/index/domainscan">域名暴破</el-menu-item>
-            <el-menu-item index="/index/vulnscansingle">漏扫（单）</el-menu-item>
-            <el-menu-item index="/index/vulnscanmulti">漏扫（多）</el-menu-item>
-        </el-sub-menu>
-        <el-sub-menu index="3">
-          <template #title><i class="el-icon-search"></i>资产管理</template>
-              <el-menu-item index="/index/company">公司管理</el-menu-item>
-              <el-menu-item index="/index/domain">域名管理</el-menu-item>
-              <el-menu-item index="/index/ip">IP管理</el-menu-item>
-              <el-menu-item index="/index/website">网站管理</el-menu-item>
-              <el-menu-item index="/index/service">服务管理</el-menu-item>
-              <el-menu-item index="/index/littleprogram">小程序管理</el-menu-item>
-              <el-menu-item index="/index/wechataccout">微信公众号管理</el-menu-item>
-        </el-sub-menu>
-        <el-sub-menu index="4">
-          <template #title>
-            <i class="el-icon-setting"></i>系统设置
+          </a-avatar>
+
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <a target="_blank" rel="noopener noreferrer">个人设置</a>
+              </a-menu-item>
+              <a-menu-item style="text-align: center;">
+                <a target="_blank" @click="OnLogout" rel="noopener noreferrer">登出</a>
+              </a-menu-item>
+            </a-menu>
           </template>
-            <el-menu-item index="/index/scanConfig">扫描设置</el-menu-item>
-            <el-menu-item index="/index/noticeConfig">通知配置</el-menu-item>
-        </el-sub-menu>
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <el-main>
-       <router-view />
-      </el-main>
-      <el-footer>design by gelen v1.0</el-footer>
-    </el-container>
-      </el-container>
-  </el-container>
+        </a-dropdown>
+      </a-layout-header>
+      <!-- <a-layout-content
+        :style="{
+          margin: '24px 16px',
+          padding: '24px',
+          background: '#fff',
+          minHeight: '700px',
+        }"
+      >-->
+      <a-layout-content
+        :style="{
+          margin: '24px 16px',
+          padding: '24px',
+          background: '#fff',
+          minHeight: '700px',
+        }"
+      >
+        <router-view />
+      </a-layout-content>
+    </a-layout>
+  </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import {
+  UserOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  // DashboardOutlined,
+} from "@ant-design/icons-vue";
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
+import { menuList } from "../common/menu"
+
+
 
 export default defineComponent({
+  components: {
+    UserOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined,
+    // DashboardOutlined,
+  },
   setup() {
-    let username:string = "gelen"
+    const router = useRouter();
+    let routers = router.getRoutes()
+    const menuClcik = (item: any, key: any, keyPath: any) => {
+      if (item.key == 1) {
+        // console.log(router.getRoutes())
+      }
+    };
+    const BntUser = () => {
+      console.log(123)
+    }
+
+    const OnLogout = () => {
+      localStorage.removeItem('token')
+      router.push("/login");
+    }
+
+
 
     return {
-      username,
-    }
+      selectedKeys: ref<string[]>(["1"]),
+      collapsed: ref<boolean>(false),
+      routers,
+      menuList,
+      OnLogout,
+      menuClcik,
+
+      BntUser,
+    };
   },
-})
+});
+
+
+
+
+
 </script>
 
 <style>
-.el-header {
-  background-color: #8caac7;
-  color: var(--el-text-color-primary);
-  line-height: 60px;
+.logoimg {
+  height: 44px;
+  vertical-align: top;
+  margin-right: 16px;
+  border-style: none;
 }
 
-.el-aside {
-  color: var(--el-text-color-primary);
-  background-color: rgb(145, 123, 123);
+.user {
+  font-size: 18px;
+  background-color: #1890ff;
+  /* line-height: 64px; */
+  /* padding: 0 24px; */
+  /* cursor: pointer; */
+  transition: color 0.3s;
+  margin-left: 92%;
 }
 
-.el-menu{
-  height: 100%;
-} 
-
-.el-main{
-  margin-top: 10px;
-  margin-left: 10px;
-  border: 2px solid var(--el-border-color-base);
-  height: 800px;
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 0px;
+  cursor: pointer;
+  transition: color 0.3s;
+  /* margin-top: 1px; */
+  /* margin-left: 90%; */
 }
- </style> 
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+#components-layout-demo-custom-trigger .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 16px;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
+</style>

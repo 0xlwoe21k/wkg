@@ -62,6 +62,7 @@ func (r *subdomainTask) Process(ctx context.Context, data pipeline.Data, tp pipe
 	if req == nil || !r.enum.Config.IsDomainInScope(req.Name) {
 		return nil, nil
 	}
+
 	// Do not further evaluate service subdomains
 	for _, label := range strings.Split(req.Name, ".") {
 		l := strings.ToLower(label)
@@ -84,18 +85,19 @@ func (r *subdomainTask) Process(ctx context.Context, data pipeline.Data, tp pipe
 }
 
 func (r *subdomainTask) checkForSubdomains(ctx context.Context, req *requests.DNSRequest, tp pipeline.TaskParams) bool {
-	labels := strings.Split(req.Name, ".")
-	num := len(labels)
+	nlabels := strings.Split(req.Name, ".")
 	// Is this large enough to consider further?
-	if num < 2 {
-		return false
-	}
-	// It cannot have fewer labels than the root domain name
-	if num-1 < len(strings.Split(req.Domain, ".")) {
+	if len(nlabels) < 2 {
 		return false
 	}
 
-	sub := strings.TrimSpace(strings.Join(labels[1:], "."))
+	dlabels := strings.Split(req.Domain, ".")
+	// It cannot have fewer labels than the root domain name
+	if len(nlabels)-1 < len(dlabels) {
+		return false
+	}
+
+	sub := strings.TrimSpace(strings.Join(nlabels[1:], "."))
 	times := r.timesForSubdomain(sub)
 	if times == 1 && r.subWithinWildcard(ctx, sub, req.Domain) {
 		r.withinWildcards.Insert(sub)
@@ -168,8 +170,17 @@ loop:
 			switch v := element.(type) {
 			case *requests.ResolvedRequest:
 				src.Request(r.enum.ctx, v)
+				if r.enum.Config.Alterations && src.String() == "Alterations" {
+					count += len(r.enum.Config.AltWordlist)
+				}
+				if r.enum.Config.BruteForcing && src.String() == "Brute Forcing" && r.enum.Config.MinForRecursive == 0 {
+					count += len(r.enum.Config.Wordlist)
+				}
 			case *requests.SubdomainRequest:
 				src.Request(r.enum.ctx, v)
+				if r.enum.Config.BruteForcing && src.String() == "Brute Forcing" && v.Times >= r.enum.Config.MinForRecursive {
+					count += len(r.enum.Config.Wordlist)
+				}
 			}
 		}
 	}

@@ -7,6 +7,7 @@ type MiniProgram struct {
 	Name       string  `gorm:"column:name"`
 	Notice     string  `gorm:"column:notice"`
 	UpdateTime string  `gorm:"column:updateTime"`
+	IsNew		*bool	`gorm:"column:isNew" json:"isNew"`
 	Companys   Company `gorm:"ForeignKey:Id;AssociationForeignKey:Cid"`
 }
 

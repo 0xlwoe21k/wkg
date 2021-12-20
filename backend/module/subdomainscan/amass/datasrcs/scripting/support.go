@@ -58,7 +58,7 @@ func extractContext(udata *lua.LUserData) (context.Context, error) {
 	return ctx, nil
 }
 
-// Wrapper so that scripts can write messages to the Amass log.
+// Wrapper so that scripts can write messages to the amass log.
 func (s *Script) log(L *lua.LState) int {
 	if ctx, err := extractContext(L.CheckUserData(1)); err == nil {
 		if _, bus, err := requests.ContextConfigBus(ctx); err == nil {

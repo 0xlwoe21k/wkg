@@ -21,10 +21,10 @@ var (
 ////go:linkname _sqreen_gls_set _sqreen_gls_set
 //var mg_gls_set func(interface{})
 //
-//// Check at Go init time that the two function variable values created by the
+//// Check at Go sql time that the two function variable values created by the
 //// instrumentation tool are present, and set the get/set variables to their
 //// values.
-//func init() {
+//func sql() {
 //	if mg_gls_get != nil && mg_gls_set != nil {
 //		set = mg_gls_set
 //		get = mg_gls_get

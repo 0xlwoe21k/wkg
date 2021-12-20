@@ -134,7 +134,7 @@ func (s *Script) newLuaState(cfg *config.Config) *lua.LState {
 	return L
 }
 
-// Save references to the script functions that serve as callbacks for Amass events.
+// Save references to the script functions that serve as callbacks for amass events.
 func (s *Script) assignCallbacks() {
 	L := s.luaState
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/db"
+	_ "backend/global"
 	_ "backend/routers"
 	"backend/services"
 	"fmt"
@@ -16,7 +17,7 @@ func main() {
 	//开启几个服务.域名监控域名、漏洞扫描服务
 	go services.InitService()
 
-	beego.Run()
+	go beego.Run()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)

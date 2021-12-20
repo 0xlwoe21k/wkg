@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"backend/db"
+	"backend/http/response"
 	Gjwt "backend/libs/jwt"
 	"backend/models"
 	"encoding/json"
@@ -19,6 +20,7 @@ type AuthController struct {
 	beego.Controller
 }
 
+
 type User struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -27,6 +29,13 @@ type User struct {
 func (u User) UnmarshalEasyJSON(w *jlexer.Lexer) {
 	panic("implement me")
 }
+
+
+func (c *AuthController) CheckLogin(){
+
+
+}
+
 
 func (c *AuthController) Post() {
 
@@ -46,10 +55,12 @@ func (c *AuthController) Post() {
 	}
 
 	if count > 0{
-		res,err := json.Marshal(Result{Code: 200,Msg: "login sucess."})
 		token := Gjwt.GenToken()
+		rd := response.Rdata{Token: token}
+		result := &response.Result{Code: 200,Msg:"sucess",Data:rd }
 		//cookie := http.Cookie{Name: "Authorization", Value: token, Path: "/", MaxAge: 3600}
-		c.Ctx.SetCookie("Authorization",token)
+		//c.Ctx.SetCookie("Authorization",token)
+		res,err := json.Marshal(result)
 		if err != nil{
 			c.Ctx.WriteString("json marshal error.")
 			return
@@ -57,7 +68,7 @@ func (c *AuthController) Post() {
 		c.Ctx.WriteString(string(res))
 		return
 	}else{
-		res,err := json.Marshal(Result{Code: 400,Msg: "login failed."})
+		res,err := json.Marshal(response.Result{Code: 400,Msg: "login failed."})
 		if err != nil{
 			c.Ctx.WriteString("json marshal error.")
 			return

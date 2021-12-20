@@ -1,0 +1,107 @@
+{
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "total": 1,
+        "count": 1,
+        "pages": 1,
+        "page": 1,
+        "page_size": 100,
+        "has_prev": false,
+        "has_next": false,
+        "items": [
+            {
+                "_id": "617b94aad4379f682e5e6350",
+                "addr": "10.200.20.52:21109",
+                "agent_id": "cbecc5ad-0257-4209-ba78-ab24094b5615",
+                "config": [
+                    {
+                        "detail": "",
+                        "downloadurl": [
+                            "https://lf3-elkeid.bytetos.com/obj/elkeid-download/plugin/driver/driver_1.6.0.0_amd64.plg",
+                            "https://lf6-elkeid.bytetos.com/obj/elkeid-download/plugin/driver/driver_1.6.0.0_amd64.plg",
+                            "https://lf9-elkeid.bytetos.com/obj/elkeid-download/plugin/driver/driver_1.6.0.0_amd64.plg",
+                            "https://lf26-elkeid.bytetos.com/obj/elkeid-download/plugin/driver/driver_1.6.0.0_amd64.plg"
+                        ],
+                        "name": "driver",
+                        "sha256": "d817195d0ce10974427ed15ef9fa86345bd666db83f5168963af4bb46bbc08d6",
+                        "version": "1.6.0.0"
+                    },
+                    {
+                        "detail": "",
+                        "downloadurl": [
+                            "https://lf3-elkeid.bytetos.com/obj/elkeid-download/plugin/journal_watcher/journal_watcher_1.6.0.0_amd64.plg",
+                            "https://lf6-elkeid.bytetos.com/obj/elkeid-download/plugin/journal_watcher/journal_watcher_1.6.0.0_amd64.plg",
+                            "https://lf9-elkeid.bytetos.com/obj/elkeid-download/plugin/journal_watcher/journal_watcher_1.6.0.0_amd64.plg",
+                            "https://lf26-elkeid.bytetos.com/obj/elkeid-download/plugin/journal_watcher/journal_watcher_1.6.0.0_amd64.plg"
+                        ],
+                        "name": "journal_watcher",
+                        "sha256": "a0c065514debf6f2109aa873ece86ec89b0e6ccedfa05c124b5863a4568ee20c",
+                        "version": "1.6.0.0"
+                    },
+                    {
+                        "detail": "",
+                        "downloadurl": [
+                            "https://lf3-elkeid.bytetos.com/obj/elkeid-download/plugin/collector/collector_1.6.0.0_amd64.plg",
+                            "https://lf6-elkeid.bytetos.com/obj/elkeid-download/plugin/collector/collector_1.6.0.0_amd64.plg",
+                            "https://lf9-elkeid.bytetos.com/obj/elkeid-download/plugin/collector/collector_1.6.0.0_amd64.plg",
+                            "https://lf26-elkeid.bytetos.com/obj/elkeid-download/plugin/collector/collector_1.6.0.0_amd64.plg"
+                        ],
+                        "name": "collector",
+                        "sha256": "f6e0b34de998844cbfc95ae0e47d39225c2449833657a6a6289d9722d8e2fdc8",
+                        "version": "1.6.0.0"
+                    }
+                ],
+                "config_update_time": 1635494258,
+                "cpu": 0.001,
+                "extranet_ipv4": [],
+                "extranet_ipv6": [],
+                "first_heartbeat_time": 1635488923,
+                "first_heartbeat_time_format": "2021-10-29 14:28:43",
+                "hostname": "cslg-10-200-20-52.test-hids.intra.openredcloud.com",
+                "intranet_ipv4": [
+                    "10.200.20.52"
+                ],
+                "intranet_ipv6": [],
+                "io": 8192,
+                "last_heartbeat_time": 1638766983,
+                "last_heartbeat_time_format": "2021-12-06 13:03:03",
+                "memory": 27762688,
+                "net_type": "sd",
+                "plugins": [
+                    {
+                        "cpu": 0,
+                        "io": 0,
+                        "name": "journal_watcher",
+                        "pid": 32518,
+                        "qps": 0,
+                        "rss": 274432,
+                        "version": "1.6.0.0"
+                    },
+                    {
+                        "cpu": 0.00033405712376204046,
+                        "io": 0,
+                        "name": "collector",
+                        "pid": 32522,
+                        "qps": 0,
+                        "rss": 32923648,
+                        "version": "1.6.0.0"
+                    },
+                    {
+                        "cpu": 0,
+                        "io": 0,
+                        "name": "driver",
+                        "pid": 3653,
+                        "qps": 0.8666666666666667,
+                        "rss": 9760768,
+                        "version": "1.6.0.0"
+                    }
+                ],
+                "slab": 324340,
+                "source_ip": "10.200.20.53",
+                "source_port": 6752,
+                "version": "1.6.0.0"
+            }
+        ]
+    }
+}

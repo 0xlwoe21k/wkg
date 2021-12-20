@@ -100,8 +100,10 @@ func (dt *dNSTask) rootTaskFunc() pipeline.TaskFunc {
 		}
 
 		if dt.enum.Config.IsDomainInScope(r.Name) {
-			dt.subdomainQueries(ctx, r, tp)
-			dt.queryServiceNames(ctx, r, tp)
+			go func() {
+				dt.subdomainQueries(ctx, r, tp)
+				dt.queryServiceNames(ctx, r, tp)
+			}()
 		}
 		return data, nil
 	})

@@ -1,6 +1,8 @@
 package services
 
-import "backend/services/DomainMonitorService"
+import (
+	"backend/services/websiteService"
+)
 
 func InitService()  {
 
@@ -9,8 +11,9 @@ func InitService()  {
 	//smq := go_smq.NewSmq()
 	//err := smq.Register(ctx,subdomainscan.PassiveDomainBrute)
 	//if err != nil{
-	//	log.Fatalln("[!] service.go InitService register error.:",err)
+	//	fmt.Println("[!] service.go InitService register error.:",err)
 	//}
-	DomainMonitorService.StartDomainMonitorService()
+	//domainService.StartDomainMonitorService()
+	websiteService.StartWebSiteMonitorService()
 }
 

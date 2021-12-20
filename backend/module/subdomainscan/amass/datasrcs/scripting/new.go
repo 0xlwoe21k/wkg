@@ -30,7 +30,7 @@ func genNewNameEvent(ctx context.Context, srv service.Service, name string) {
 	}
 }
 
-// Wrapper so that scripts can send a discovered FQDN to Amass.
+// Wrapper so that scripts can send a discovered FQDN to amass.
 func (s *Script) newName(L *lua.LState) int {
 	if ctx, err := extractContext(L.CheckUserData(1)); err == nil {
 		if n := L.CheckString(2); n != "" {
@@ -42,7 +42,7 @@ func (s *Script) newName(L *lua.LState) int {
 	return 0
 }
 
-// Wrapper so that scripts can send FQDNs found in the content to Amass.
+// Wrapper so that scripts can send FQDNs found in the content to amass.
 func (s *Script) sendNames(L *lua.LState) int {
 	var num int
 
@@ -70,7 +70,7 @@ func (s *Script) internalSendNames(ctx context.Context, content string) int {
 	return filter.Len()
 }
 
-// Wrapper so that scripts can send discovered IP addresses to Amass.
+// Wrapper so that scripts can send discovered IP addresses to amass.
 func (s *Script) newAddr(L *lua.LState) int {
 	ip := net.ParseIP(L.CheckString(2))
 
@@ -99,7 +99,7 @@ func (s *Script) newAddr(L *lua.LState) int {
 	return 0
 }
 
-// Wrapper so that scripts can send discovered ASNs to Amass.
+// Wrapper so that scripts can send discovered ASNs to amass.
 func (s *Script) newASN(L *lua.LState) int {
 	if ctx, err := extractContext(L.CheckUserData(1)); err == nil {
 		_, bus, err := requests.ContextConfigBus(ctx)
@@ -157,7 +157,7 @@ func (s *Script) newASN(L *lua.LState) int {
 	return 0
 }
 
-// Wrapper so that scripts can send discovered associated domains to Amass.
+// Wrapper so that scripts can send discovered associated domains to amass.
 func (s *Script) associated(L *lua.LState) int {
 	if ctx, err := extractContext(L.CheckUserData(1)); err == nil {
 		_, bus, err := requests.ContextConfigBus(ctx)

@@ -43,7 +43,7 @@ const (
 	ContextEventBus
 )
 
-// Request Pub/Sub topics used across Amass.
+// Request Pub/Sub topics used across amass.
 const (
 	NewNameTopic       = "amass:newname"
 	NewAddrTopic       = "amass:newaddr"
@@ -83,7 +83,7 @@ func ContextConfigBus(ctx context.Context) (*config.Config, *eventbus.EventBus, 
 	return cfg, bus, nil
 }
 
-// DNSAnswer is the type used by Amass to represent a DNS record.
+// DNSAnswer is the type used by amass to represent a DNS record.
 type DNSAnswer struct {
 	Name string `json:"name"`
 	Type int    `json:"type"`
@@ -266,7 +266,7 @@ func (a *AddrRequest) Valid() bool {
 	return true
 }
 
-// ASNRequest handles all autonomous system information needed by Amass.
+// ASNRequest handles all autonomous system information needed by amass.
 type ASNRequest struct {
 	Address        string
 	ASN            int

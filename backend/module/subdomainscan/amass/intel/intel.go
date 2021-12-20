@@ -30,7 +30,7 @@ const (
 	maxActivePipelineTasks int = 25
 )
 
-// Collection is the object type used to execute a open source information gathering with Amass.
+// Collection is the object type used to execute a open source information gathering with amass.
 type Collection struct {
 	sync.Mutex
 	Config            *config.Config

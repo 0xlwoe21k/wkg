@@ -1,17 +1,17 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import router from './router'
-import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
-import axios from 'axios';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import Antd from "ant-design-vue";
+// import { DatePicker } from 'ant-design-vue';
+// import setupInterceptors from './service/setupInterceptors';
+import "ant-design-vue/dist/antd.css";
 
-const app =createApp(App)
 
-app.use(ElementPlus)
+// setupInterceptors(store)
+
+const app = createApp(App);
+app.use(store);
+app.use(router);
 app.use(Antd);
-app.use(router)
-app.mount('#app')
-
-
+app.mount("#app");

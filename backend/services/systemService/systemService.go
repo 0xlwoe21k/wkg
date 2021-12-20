@@ -1,0 +1,7 @@
+package systemService
+
+
+func MemStatusMonitor()  {
+
+}
+

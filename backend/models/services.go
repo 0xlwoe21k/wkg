@@ -7,6 +7,7 @@ type Services struct {
 	Ipport     string  `gorm:"column:ipport"`
 	Product    string  `gorm:"column:product"`
 	UpdateTime string  `gorm:"column:updateTime"`
+	IsNew		*bool	`gorm:"column:isNew" json:"isNew"`
 	Companys   Company `gorm:"ForeignKey:Id;AssociationForeignKey:Cid"`
 }
 
