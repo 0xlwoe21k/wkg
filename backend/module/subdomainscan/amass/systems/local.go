@@ -64,10 +64,10 @@ func NewLocalSystem(c *config.Config) (*LocalSystem, error) {
 	}
 
 	// Load the ASN information into the cache
-	if err := sys.loadCacheData(); err != nil {
-		_ = sys.Shutdown()
-		return nil, err
-	}
+	//if err := sys.loadCacheData(); err != nil {
+	//	_ = sys.Shutdown()
+	//	return nil, err
+	//}
 	// Make sure that the output directory is setup for this local system
 	if err := sys.setupOutputDirectory(); err != nil {
 		_ = sys.Shutdown()

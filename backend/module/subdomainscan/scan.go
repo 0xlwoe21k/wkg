@@ -65,7 +65,8 @@ func DomainBrute(rootDomain string) []requests.Output {
 
 	// Setup the most basic amass configuration
 	cfg := config.NewConfig()
-	cfg.AddDomain("example.com")
+	cfg.AddDomain(rootDomain)
+	cfg.Dir = "/tmp"
 
 	sys, err := systems.NewLocalSystem(cfg)
 	if err != nil {
