@@ -1,19 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 <template>
-  <div
-    :style="{
-      margin: '24px 16px',
-      padding: '24px',
-      background: '#fff',
-      minHeight: '700px',
-    }"
-  >
+ 
     <a-row type="flex" justify="start" :gutter="16">
       <a-col :span="6">
-        <a-input
-          v-model:value="searchKey"
-          placeholder="公司名称、域名、SRC地址、关键字."
-        />
+        <a-input v-model:value="searchKey" placeholder="公司名称、域名、SRC地址、关键字." />
       </a-col>
       <a-col :span="2">
         <a-select
@@ -68,7 +58,7 @@
           :columns="columns"
           :data-source="rolesList.list"
           :align="dbalign"
-          :rowKey="(record:any, index:any) => index"
+          :rowKey="(record: any, index: any) => index"
           @change="handleTableChange"
           :scroll="{ x: 1500, y: 1500 }"
           :pagination="Mypagination"
@@ -77,29 +67,20 @@
             <template v-if="column.key === 'operation'">
               <a-row type="flex" justify="center">
                 <a-col :span="6">
-                  <a-button
-                    size="small"
-                    type="primary"
-                    @click="OnEdit(record.id)"
-                    >Edit</a-button
-                  >
+                  <a-button size="small" type="primary" @click="OnEdit(record.id)">Edit</a-button>
                 </a-col>
                 <a-col :span="7">
-                  <a-button
-                    size="small"
-                    type="primary"
-                    @click="OnScan(record.id)"
-                    >Scan</a-button
-                  >
+                  <a-button size="small" type="primary" @click="OnScan(record.id)">Scan</a-button>
                 </a-col>
                 <a-col :span="7">
-                  <a-button
-                    size="small"
-                    type="primary"
-                    @click="OnDelete(record.id)"
-                    danger
-                    >Delete</a-button
+                  <a-popconfirm
+                    title="你确定？"
+                    ok-text="Yes"
+                    cancel-text="No"
+                    @confirm="OnDelete(record.id)"
                   >
+                    <a-button size="small" type="primary" danger>Delete</a-button>
+                  </a-popconfirm>
                 </a-col>
               </a-row>
             </template>
@@ -115,7 +96,7 @@
         </a-table>
       </a-col>
     </a-row>
-  </div>
+
 </template>
 <script lang="ts">
 import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons-vue";

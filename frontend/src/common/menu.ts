@@ -24,24 +24,23 @@ export const menuList:Array<Menu> = [
 		title: '在线扫描',
 		children: [{
 			key: '2.1',
-			path: '/index/agentManage',
+			path: '/index/onlineScan/vulnScan',
 			title: '漏洞扫描'
 		},
 		{
 			key: '2.2',
-			path: '/index/agentManage',
+			path: '/index/onlineScan/domainScan',
 			title: '域名扫描'
 		}]
 	},
 	{
 		key: '3',
-		path: '/index/taskManage',
+		path: '/index/src',
 		title: 'SRC管理',
 		children: [{
 			key: '3.1',
 			path: '/index/src/gather',
 			title: '资产总览'
-
 		},
 		{
 			key: '3.2',
@@ -95,27 +94,27 @@ export const menuList:Array<Menu> = [
 		title: '任务管理',
 		children: [{
 			key: '5.1',
-			path: '/index/task/taskManage',
+			path: '/index/task/taskList',
 			title: '任务列表'
 		},]
 	},
 	{
 		key: '6',
-		path: '/index/dashboard',
+		path: '/index/vulns',
 		title: '漏洞管理',
 		children: [{
 			key: '6.1',
-			path: '/index/vuln/poc',
+			path: '/index/vulns/pocs',
 			title: 'POC管理'
 		}]
 	},
 	{
 		key: '7',
-		path: '/knowledge',
+		path: '/index/knowledge',
 		title: '知识库',
 		children: [{
 			key: '7.1',
-			path: '/index/knowledge/knowledge',
+			path: '/index/knowledge/vuln',
 			title: '漏洞知识库'
 		},
 		{
@@ -130,12 +129,12 @@ export const menuList:Array<Menu> = [
 		title: '系统设置',
 		children: [{
 			key: '8.1',
-			path: '/index/agentManage',
+			path: '',
 			title: '扫描配置'
 		},
 		{
 			key: '8.1',
-			path: '/index/agentManage',
+			path: '',
 			title: '通知配置'
 		}]
 	}

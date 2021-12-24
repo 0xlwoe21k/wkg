@@ -67,6 +67,11 @@ func DomainBrute(rootDomain string) []requests.Output {
 	cfg := config.NewConfig()
 	cfg.AddDomain(rootDomain)
 	cfg.Dir = "/tmp"
+	//cfg.Resolvers = Resolvers
+	cfg.Passive = true
+	cfg.LocalDatabase =false
+	cfg.Recursive = false
+	cfg.Alterations = false
 
 	sys, err := systems.NewLocalSystem(cfg)
 	if err != nil {

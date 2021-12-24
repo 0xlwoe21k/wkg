@@ -35,9 +35,7 @@ axiosInstance.interceptors.response.use(
 			localStorage.removeItem("token");
 			router.push("/login");
 
-		} else {
-			alert(error.response.data);
-		}
+		} 
 		return Promise.reject(error);
 	}
 );

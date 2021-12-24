@@ -2,7 +2,9 @@ package helper
 
 import (
 	"bytes"
+	"crypto/md5"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"github.com/twmb/murmur3"
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -56,4 +58,10 @@ func UTF8ReDecode(text string, encodeStr string) (string, error) {
 		return "", err
 	}
 	return string(d), nil
+}
+
+func Md5(str string) string  {
+	h := md5.New()
+	h.Write([]byte(str))
+	return hex.EncodeToString(h.Sum(nil))
 }

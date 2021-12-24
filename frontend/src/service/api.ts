@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
   // 请求错误
   (error) => {
     if (error.response.status == 401) {
-      alert("token过期,请重新登录!");
+      // alert("token过期,请重新登录!");
       localStorage.removeItem("token");
       router.push("/login");
     } else {

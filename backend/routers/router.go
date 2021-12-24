@@ -71,4 +71,24 @@ func init() {
 	beego.Router("/v2/domainScan", &controllers.DomainScanController{}, "get:DomainScan")
 	beego.Router("/v2/VulnScanSingle", &controllers.VulnController{}, "get:VulnScanSingle")
 	beego.Router("/v2/VulnScanMulti", &controllers.VulnController{}, "get:VulnScanMulti")
+
+
+	beego.Router("/v1/getTopCategories", &controllers.KnowledgeController{}, "get:GetTopCategories")
+	beego.Router("/v1/getSecondCategories", &controllers.KnowledgeController{}, "get:GetSecondCategories")
+	beego.Router("/v1/getKnowledgeCategories", &controllers.KnowledgeController{}, "get:GetKnowledgeCategories")
+	beego.Router("/v1/getKnowledge", &controllers.KnowledgeController{}, "get:GetKnowledge")
+
+	beego.Router("/v1/getTopSelectOption", &controllers.KnowledgeController{}, "get:GetTopSelectOption")
+	beego.Router("/v1/getSecodSelectOption", &controllers.KnowledgeController{}, "get:GetSecodSelectOption")
+	beego.Router("/v1/getSummary", &controllers.KnowledgeController{}, "get:GetSummary")
+	beego.Router("/v1/saveNewKnowledge", &controllers.KnowledgeController{}, "post:SaveNewKnowledge")
+	beego.Router("/v1/saveEditKnowledge", &controllers.KnowledgeController{}, "post:SaveEditKnowledge")
+
+	beego.Router("/v1/getTree", &controllers.KnowledgeController{}, "get:GetTree")
+
+
+
+
+
+
 }

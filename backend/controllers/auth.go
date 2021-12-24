@@ -14,6 +14,7 @@ import (
 type Result struct {
 	Code 	int `json:"code"`
 	Msg		string `json:"msg"`
+	Data	string `json:"data"`
 }
 
 type AuthController struct {

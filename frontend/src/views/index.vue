@@ -54,23 +54,28 @@
           </template>
         </a-dropdown>
       </a-layout-header>
-      <!-- <a-layout-content
-        :style="{
-          margin: '24px 16px',
-          padding: '24px',
-          background: '#fff',
-          minHeight: '700px',
-        }"
-      >-->
-      <a-layout-content
-        :style="{
-          margin: '24px 16px',
-          padding: '24px',
-          background: '#fff',
-          minHeight: '700px',
-        }"
-      >
-        <router-view />
+
+      <a-layout-content>
+        <a-breadcrumb style="margin-left:1% ; padding: 5px; font-size: 14px;">
+          <a-breadcrumb-item v-for="(item, index) in routes" :key="item.name">
+            <router-link
+              v-if=" index !== routes.length -1 "
+              :to="{ path: item.path === '' ? '/' : item.path }"
+            >{{ item.meta.title }}</router-link>
+            <span v-else>{{ item.meta.title }}</span>
+          </a-breadcrumb-item>
+
+        </a-breadcrumb>
+        <div
+          :style="{
+            margin: '0px 16px',
+            padding: '24px',
+            background: '#fff',
+            minHeight: '700px',
+          }"
+        >
+          <router-view />
+        </div>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -83,7 +88,7 @@ import {
   MenuFoldOutlined,
   // DashboardOutlined,
 } from "@ant-design/icons-vue";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { menuList } from "../common/menu"
 
@@ -98,7 +103,8 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    let routers = router.getRoutes()
+    const routes = computed(() => { return router.currentRoute.value.matched.filter(item => item.meta.title) })
+
     const menuClcik = (item: any, key: any, keyPath: any) => {
       if (item.key == 1) {
         // console.log(router.getRoutes())
@@ -114,21 +120,18 @@ export default defineComponent({
     }
 
 
-
     return {
       selectedKeys: ref<string[]>(["1"]),
       collapsed: ref<boolean>(false),
-      routers,
+      routes,
       menuList,
+      basePath: '',
       OnLogout,
       menuClcik,
-
       BntUser,
     };
   },
 });
-
-
 
 
 
