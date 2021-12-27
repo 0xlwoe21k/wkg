@@ -83,8 +83,10 @@ func init() {
 	beego.Router("/v1/getSummary", &controllers.KnowledgeController{}, "get:GetSummary")
 	beego.Router("/v1/saveNewKnowledge", &controllers.KnowledgeController{}, "post:SaveNewKnowledge")
 	beego.Router("/v1/saveEditKnowledge", &controllers.KnowledgeController{}, "post:SaveEditKnowledge")
-
 	beego.Router("/v1/getTree", &controllers.KnowledgeController{}, "get:GetTree")
+	beego.Router("/v1/addTopNode", &controllers.KnowledgeController{}, "get:AddTopNode")
+	beego.Router("/v1/addSecondNode", &controllers.KnowledgeController{}, "get:AddSecondNode")
+	beego.Router("/v1/delTreeNode", &controllers.KnowledgeController{}, "post:DelTreeNode")
 
 
 

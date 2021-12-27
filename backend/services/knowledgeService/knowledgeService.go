@@ -62,7 +62,7 @@ func GetCategoryTree() ([]models.CategoryTree, error) {
 
 	var ToptreeCache = make(map[int]models.CategoryTree)
 	//一级菜单
-	err := db.Orm.Model(&models.Category{}).Select("id,title,ckey,isLeaf,level").Where("parentId=? and level=?", 0, 1).Find(&categories).Error
+	err := db.Orm.Debug().Model(&models.Category{}).Select("id,title,ckey,isLeaf,level").Where("parentId=? and level=?", 0, 1).Order("id ASC").Find(&categories).Error
 	if err != nil {
 		return nil, err
 	}
@@ -96,35 +96,35 @@ func GetCategoryTree() ([]models.CategoryTree, error) {
 	}
 	_tree = models.CategoryTree{}
 	//有的文章在一级菜单下，所以也要带上
-	Secondknowledge := []models.Knowledge{}
-	err = db.Orm.Model(&models.Knowledge{}).Select("parentId,title,ckey,isLeaf,level").Find(&Secondknowledge).Error
-	if err != nil {
-		fmt.Println("knowledgeserver.go err[", err, "]")
-		return nil, err
-	}
-	for _, v := range Secondknowledge {
-		if ptree, ok := ToptreeCache[v.ParentId]; ok {
-			if v.Level == 2 && v.IsLeaf == true {
-				_tree.Id = v.Id
-				_tree.ParentId = v.ParentId
-				_tree.Key = v.CKey
-				_tree.Title = v.Title
-				_tree.Level = v.Level
-				_tree.IsLeaf = v.IsLeaf
-				ptree.Children = append(ptree.Children, _tree)
-				ToptreeCache[v.ParentId] = ptree
-			}
-		}
-	}
-	_tree = models.CategoryTree{}
-	knowledge := []models.Knowledge{}
+	//Secondknowledge := []models.Knowledge{}
+	//err = db.Orm.Model(&models.Knowledge{}).Select("parentId,title,ckey,isLeaf,level").Find(&Secondknowledge).Error
+	//if err != nil {
+	//	fmt.Println("knowledgeserver.go err[", err, "]")
+	//	return nil, err
+	//}
+	//for _, v := range Secondknowledge {
+	//	if ptree, ok := ToptreeCache[v.ParentId]; ok {
+	//		if v.Level == 2 && v.IsLeaf == true {
+	//			_tree.Id = v.Id
+	//			_tree.ParentId = v.ParentId
+	//			_tree.Key = v.CKey
+	//			_tree.Title = v.Title
+	//			_tree.Level = v.Level
+	//			_tree.IsLeaf = v.IsLeaf
+	//			ptree.Children = append(ptree.Children, _tree)
+	//			ToptreeCache[v.ParentId] = ptree
+	//		}
+	//	}
+	//}
+	//_tree = models.CategoryTree{}
+	knowledgeCate := []models.Category{}
 	//三级菜单
-	err = db.Orm.Model(&models.Knowledge{}).Select("parentId,title,ckey,isLeaf,level").Find(&knowledge).Error
+	err = db.Orm.Model(&models.Category{}).Select("parentId,title,ckey,isLeaf,level").Where("level=?",3).Find(&knowledgeCate).Error
 	if err != nil {
 		fmt.Println("knowledgeserver.go err[", err, "]")
 		return nil, err
 	}
-	for _, v := range knowledge {
+	for _, v := range knowledgeCate {
 		if ptree, ok := SecondtreeCache[v.ParentId]; ok {
 			_tree.Id = v.Id
 			_tree.ParentId = v.ParentId
@@ -177,7 +177,6 @@ func GetTopSelectOption() ([]Option, error) {
 	//	fmt.Println("knowledgeserver.go err[",err,"]")
 	//	return nil,err
 	//}
-
 	cate := []models.Category{}
 	err := db.Orm.Model(&models.Category{}).Where("level=?", 1).Find(&cate).Error
 	if err != nil {
@@ -235,38 +234,92 @@ func GetSummary() ([]KList, error) {
 
 	return knowledgeList, nil
 }
+
+func AddTopNode(topNode string) (error) {
+	var cate models.Category
+
+	cate.ParentId = 0
+	cate.Title = topNode
+	cate.Level = 1
+	cate.CKey = helper.Md5(time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05"))
+
+	err := db.Orm.Model(&models.Category{}).Create(&cate).Error
+	if err != nil {
+		fmt.Println("knowledgeserver.go err[", err, "]")
+		return err
+	}
+	return nil
+}
+
+func AddSecondNode(topKey string,secondNode string) (error) {
+	var cate models.Category
+
+	var pid int
+	err := db.Orm.Model(&models.Category{}).Select("id").Where("ckey=?", topKey).Find(&pid).Error
+	if err != nil {
+		fmt.Println("knowledgeserver.go err[", err, "]")
+		return err
+	}
+	cate.ParentId = pid
+	cate.Title = secondNode
+	cate.Level = 2
+	cate.CKey = helper.Md5(time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05"))
+
+	err = db.Orm.Model(&models.Category{}).Create(&cate).Error
+	if err != nil {
+		fmt.Println("knowledgeserver.go err[", err, "]")
+		return err
+	}
+	return nil
+}
+
+
+
+
 func SaveNewKnowledge(topValue string, secondValue string, title string, content string)(string,error)  {
 	var pid int
 	var err error
 	var tKnow models.Knowledge
+	var cate models.Category
 	if secondValue != "" {
 		err := db.Orm.Model(&models.Category{}).Select("id").Where("ckey=?", secondValue).Find(&pid).Error
 		if err != nil {
 			fmt.Println("knowledgeserver.go err[", err, "]")
 			return "",err
 		}
-		tKnow.Level = 3
+		cate.Level = 3
 	} else {
 		err := db.Orm.Model(&models.Category{}).Select("id").Where("ckey=?", topValue).Find(&pid).Error
 		if err != nil {
 			fmt.Println("knowledgeserver.go err[", err, "]")
 			return "",err
 		}
-		tKnow.Level = 2
+		cate.Level = 2
 	}
 	now := time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05")
 
-	tKnow.ParentId = pid
 	tKnow.Content = content
 	tKnow.Title = title
 	tKnow.CKey = helper.Md5(now)
 	tKnow.UpdateTime = now
-	tKnow.IsLeaf = true
 
-	err = db.Orm.Debug().Create(&tKnow).Error
+
+	cate.ParentId = pid
+	cate.Title = title
+	cate.CKey = tKnow.CKey
+	cate.IsLeaf = true
+
+	err = db.Orm.Debug().Model(&models.Knowledge{}).Create(&tKnow).Error
 	if err != nil {
 		return "",err
 	}
+
+
+	err = db.Orm.Debug().Model(&models.Category{}).Create(&cate).Error
+	if err != nil {
+		return "",err
+	}
+
 	return tKnow.CKey, nil
 }
 
@@ -279,15 +332,31 @@ func SaveEditKnowledge(topValue string, secondValue string, title string, conten
 	}
 	now := time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05")
 	var tKnow models.Knowledge
-	tKnow.ParentId = pid
 	tKnow.Content = content
 	tKnow.Title = title
 	tKnow.UpdateTime = now
-	tKnow.IsLeaf = true
-	tKnow.Level = 3
 	err = db.Orm.Debug().Where("ckey=?", key).Updates(&tKnow).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
+func DelTreeNode(isLeaf bool, key string) error {
+	err := db.Orm.Model(&models.Category{}).Where("ckey=?",key).Delete(&models.Category{}).Error
+	if err != nil {
+		fmt.Println("knowledgeserver.go err[", err, "]")
+		return err
+	}
+
+	if(isLeaf){
+		err = db.Orm.Model(&models.Knowledge{}).Where("ckey=?",key).Delete(&models.Knowledge{}).Error
+		if err != nil {
+			fmt.Println("knowledgeServer.go err[", err, "]")
+			return err
+		}
+	}
+
+	return nil
+}
+
+

@@ -261,7 +261,94 @@ func (c *KnowledgeController) GetSummary() {
 
 }
 
+func (c *KnowledgeController) AddTopNode() {
+	topNode := c.Ctx.Request.FormValue("topNode")
+
+	err := knowledgeService.AddTopNode(topNode)
+	if err != nil {
+		fmt.Println(err)
+		res, _ := json.Marshal(Res{Code: 400, Msg: "AddTopNode error.",Data: "[]"})
+		c.Ctx.WriteString(string(res))
+		return
+	}
+
+	res, _ := json.Marshal(Res{Code: 200, Msg: "sucess",Data: "[]"})
+	c.Ctx.WriteString(string(res))
+	return
+
+}
+
+func (c *KnowledgeController) AddSecondNode() {
+	SecondNode := c.Ctx.Request.FormValue("topNode")
+	parentKey := c.Ctx.Request.FormValue("parentKey")
+
+
+	err := knowledgeService.AddSecondNode(parentKey,SecondNode,)
+	if err != nil {
+		fmt.Println(err)
+		res, _ := json.Marshal(Res{Code: 400, Msg: "AddTopNode error.",Data: "[]"})
+		c.Ctx.WriteString(string(res))
+		return
+	}
+
+	res, _ := json.Marshal(Res{Code: 200, Msg: "sucess",Data: "[]"})
+	c.Ctx.WriteString(string(res))
+	return
+
+}
+
 func (c *KnowledgeController) GetTree() {
+
+	tree, err := knowledgeService.GetCategoryTree()
+	if err != nil {
+		fmt.Println(err)
+		res, _ := json.Marshal(Result{Code: 400, Msg: "GetSecodSelectOption error."})
+		c.Ctx.WriteString(string(res))
+		return
+	}
+
+	data, _ := json.Marshal(tree)
+	res, _ := json.Marshal(Result{Code: 200, Msg: "success", Data: string(data)})
+	c.Ctx.WriteString(string(res))
+	return
+
+}
+
+
+
+func (c *KnowledgeController) DelTreeNode() {
+	type delOption struct {
+		IsLeaf bool `json:"isLeaf"`
+		Key string `json:"key"`
+	}
+
+	var op delOption
+
+	body := c.Ctx.Input.RequestBody
+	err := json.Unmarshal(body, &op)
+	if err != nil {
+		fmt.Println(err)
+		res, _ := json.Marshal(Result{Code: 400, Msg: "json unmarshal error."})
+		c.Ctx.WriteString(string(res))
+		return
+	}
+
+	err = knowledgeService.DelTreeNode(op.IsLeaf,op.Key)
+	if err != nil {
+		fmt.Println(err)
+		res, _ := json.Marshal(Res{Code: 400, Msg: "GetSecodSelectOption error.",Data: "[]"})
+		c.Ctx.WriteString(string(res))
+		return
+	}
+
+	res, _ := json.Marshal(Result{Code: 200, Msg: "success", Data: "[]"})
+	c.Ctx.WriteString(string(res))
+	return
+
+}
+
+
+func (c *KnowledgeController) DelKnowledgeByKey() {
 
 	tree, err := knowledgeService.GetCategoryTree()
 	if err != nil {

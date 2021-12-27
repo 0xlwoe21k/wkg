@@ -1,183 +1,64 @@
 <template>
-    <a-input-search
-        v-model:value="searchValue"
-        style="margin-bottom: 8px"
-        enter-button
-        placeholder="Search"
-    />
-
-    <a-directory-tree
-        v-model:expandedKeys="expandedKeys"
-        v-model:selectedKeys="selectedKeys"
-        :auto-expand-parent="autoExpandParent"
-        :showLine="true"
-        :multiple="false"
-        :height="500"
-        :tree-data="tdList"
-        :style="{ padding: '10px' }"
-        @expand="Onexpand"
-    >
-        <template #title="{ title }">
-            <span v-if="title.indexOf(searchValue) > -1">
-                {{ title.substr(0, title.indexOf(searchValue)) }}
-                <span
-                    style="color: #f50"
-                >{{ searchValue }}</span>
-                {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
-            </span>
-            <span v-else>{{ title }}</span>
+  <a-tree v-model:expandedKeys="expandedKeys" :tree-data="treeData">
+    <template #title="{ key: treeKey, title }">
+      <a-dropdown :trigger="['contextmenu']">
+        <span>{{ title }}</span>
+        <template #overlay>
+          <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
+            <a-menu-item key="1">1st menu item</a-menu-item>
+            <a-menu-item key="2">2nd menu item</a-menu-item>
+            <a-menu-item key="3">3rd menu item</a-menu-item>
+          </a-menu>
         </template>
-    </a-directory-tree>
+      </a-dropdown>
+    </template>
+  </a-tree>
 </template>
-
-
 <script lang="ts">
-interface TreeProps {
-    title?: string
-    key?: string
-    level?: number
-    isLeaf?: boolean
-    children?: TreeProps[]
-}
+import { defineComponent, watch, ref } from 'vue';
 
-interface Konwledge {
-    title?: string
-    content?: string
-    updateTime?: string
-}
-
-interface option {
-    value: string,
-    label: string
-}
-import { defineComponent, ref, onMounted, reactive, watch } from 'vue';
-import knowledgeService from "../../service/knowledge.service";
-
+const treeData = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          { title: '0-0-0-0', key: '0-0-0-0' },
+          { title: '0-0-0-1', key: '0-0-0-1' },
+          { title: '0-0-0-2', key: '0-0-0-2' },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          { title: '0-0-1-0', key: '0-0-1-0' },
+          { title: '0-0-1-1', key: '0-0-1-1' },
+          { title: '0-0-1-2', key: '0-0-1-2' },
+        ],
+      },
+    ],
+  },
+];
 export default defineComponent({
-    components: {
+  setup() {
+    const onContextMenuClick = (treeKey: string, menuKey: string) => {
+      console.log(`treeKey: ${treeKey}, menuKey: ${menuKey}`);
+    };
+    const expandedKeys = ref<string[]>(['0-0-0', '0-0-1']);
 
-    },
-    setup() {
-        let searchValue = ref('')
-        const expandedKeys = ref<(string | number)[]>([]);
-        const selectedKeys = ref<string[]>([]);
-        let tdList: TreeProps[] = reactive([])
-        let tlList: Konwledge[] = reactive([])
-        let autoExpandParent = ref<boolean>(true);
-        let ShowNodeKey: (string | number)[] = []
-
-
-        const Init = () => {
-            knowledgeService.getTree().then((res: any) => {
-                // tdList = JSON.parse(res.data.data)
-                let td: TreeProps = {}
-                let jdata = JSON.parse(res.data.data)
-                if (jdata.length < 0) { return }
-
-                for (let element of jdata) {
-                    td.title = element.title
-                    td.key = element.key
-                    td.level = element.level
-                    td.isLeaf = element.isLeaf
-                    td.children = element.children
-                    tdList.push(td)
-                    td = {}
-                }
-            })
-            knowledgeService.getSummary().then((res: any) => {
-                let _kList: Konwledge = {}
-                let jdata = JSON.parse(res.data.msg)
-                if (jdata.length < 0) { return }
-                for (let i = 0; i < jdata.length; i++) {
-                    _kList.title = jdata[i].title
-                    _kList.updateTime = jdata[i].updateTime
-                    // console.log(_kList)
-                    tlList.push(_kList)
-                    _kList = {}
-                }
-
-            })
-            console.log(tdList)
-        }
-
-
-        onMounted(() => {
-            Init()
-        })
-
-
-        const getParentKey = (
-            key: string | number,
-            tree: TreeProps[],
-        ): string | number | undefined => {
-            let parentKey;
-            let xtree = tree || []
-
-            for (let i = 0; i < xtree.length; i++) {
-                const node = xtree[i];
-                if (node.children) {
-                    if (node.children.some(item => item.key === key)) {
-                        parentKey = node.key;
-                    } else if (getParentKey(key, node.children)) {
-                        parentKey = getParentKey(key, node.children);
-                    }
-                }
-            }
-            return parentKey;
-        };
-
-        const getMatchKey = (node: TreeProps[]) => {
-            if (!node) {
-                return
-            }
-            for (let i = 0; i < node.length; i++) {
-                if ((node[i].title || '').indexOf(searchValue.value) > -1) {
-                    let xkey = node[i].key || ''
-                    // ShowNodeKey.push(xkey)
-                    let pkey = getParentKey(xkey, tdList) || ''
-                    ShowNodeKey.push(pkey)
-                }
-                let _child = node[i].children || []
-                if (_child) {
-                    getMatchKey(_child)
-                }
-            }
-            console.log(ShowNodeKey)
-        }
-
-        watch(searchValue, value => {
-            ShowNodeKey = []
-            if (value.length > 0) {
-
-                getMatchKey(tdList);
-                searchValue.value = value;
-                expandedKeys.value = ShowNodeKey
-                autoExpandParent.value = true;
-            } else {
-                searchValue.value = value;
-                expandedKeys.value = []
-                autoExpandParent.value = true;
-            }
-
-
-        });
-
-        const Onexpand = (exkey: any, expand: any) => {
-            expandedKeys.value = exkey;
-            autoExpandParent.value = false;
-        }
-
-
-
-        return {
-            expandedKeys,
-            selectedKeys,
-            searchValue,
-            tdList,
-            autoExpandParent,
-            Onexpand,
-        };
-    },
+    watch(expandedKeys, () => {
+      console.log('expandedKeys', expandedKeys);
+    });
+    return {
+      treeData,
+      onContextMenuClick,
+      expandedKeys,
+    };
+  },
 });
 </script>
- 
+<style></style>

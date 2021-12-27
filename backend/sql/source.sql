@@ -195,17 +195,14 @@ drop table knowledge;
 create table knowledge
 (
     id       int primary key auto_increment,
-    parentId int,
     title    text,
-    isLeaf   bool,
     content  text,
-    level   int,
     ckey    varchar(33),
     updateTime text
 ) default charset = gbk;
 
 
-insert into knowledge values (1, 5, 'log4j远程代码执行漏洞',true,'${jndi:idap:///adfdf.com.cm}',3, '0-0-0-0','20102020');
+insert into knowledge values (1, 'log4j远程代码执行漏洞','${jndi:idap:///adfdf.com.cm}', '0-0-0-0','20102020');
 
 drop table category;
 create table category

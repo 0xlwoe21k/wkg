@@ -2,11 +2,8 @@ package models
 
 type Knowledge struct {
 	Id         int    `gorm:"primary_key;column:id"  json:"id"`
-	ParentId   int    `gorm:"column:parentId"  json:"parentId"`
 	Title      string `gorm:"column:title"    json:"title"`
 	Content    string `gorm:"column:content" json:"content"`
-	IsLeaf     bool   `gorm:"column:isLeaf" json:"isLeaf"`
-	Level      int    `gorm:"column:level" json:"level"`
 	CKey       string `gorm:"column:ckey" json:"key"`
 	UpdateTime string `gorm:"column:updateTime" json:"updateTime"`
 }
